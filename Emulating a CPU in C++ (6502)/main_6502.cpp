@@ -23,6 +23,11 @@ struct Mem
     {
         return Data[Address];
     }
+    //write 1 byte from memory
+    Byte& operator[] (u32 Address)
+    {
+        return Data[Address];
+    }
 
 };
 
@@ -51,7 +56,7 @@ struct CPU
 
     }
 
-    Byte Fetch ( u32 cycles, Mem& memory) 
+    Byte FetchByte ( u32 cycles, Mem& memory) 
     {
         Byte Data = memory[PC];
         PC++;
@@ -67,12 +72,12 @@ struct CPU
     {
         while (Cycles >0)
         {
-            Byte Ins = Fetch( Cycles, memory);
+            Byte Ins = FetchByte( Cycles, memory);
             switch (Ins)
             {
             case INS_LDA_IM:
             {
-                Byte Value = Fetch( Cycles, memory);
+                Byte Value = FetchByte( Cycles, memory);
                 A = Value;
                 Z = (A ==0);
                 N = (A &0b10000000) > 0;
@@ -92,6 +97,10 @@ int main()
     Mem mem;
     CPU cpu;
     cpu.Reset( mem );
+    //start of a little inline program
+    mem[0xFFFC] = CPU::INS_LDA_IM;
+    mem[0xFFFD] = 0x42; //for example we want to load hex value 0x42
+    //end of a little inline program
     cpu.Execute( 2, mem );
     return 0;
 }
