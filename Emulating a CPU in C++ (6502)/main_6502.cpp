@@ -18,6 +18,12 @@ struct Mem
         }
     }
 
+    //read 1 byte from memory
+    Byte operator[] (u32 Address) const
+    {
+        return Data[Address];
+    }
+
 };
 
 struct CPU
@@ -44,6 +50,22 @@ struct CPU
         memory.Initialise();
 
     }
+
+    Byte Fetch ( u32 cycles, Mem& memory) 
+    {
+        Byte Data = memory[PC];
+        PC++;
+        cycles--;
+    }
+
+    void Execute ( u32 Cycles, Mem& memory)
+    {
+        while (Cycles >0)
+        {
+            Byte Ins = Fetch( Cycles, memory);
+            (void)Ins;
+        }
+    }
 };
 
 int main()
@@ -51,5 +73,6 @@ int main()
     Mem mem;
     CPU cpu;
     cpu.Reset( mem );
+    cpu.Execute( 2, mem );
     return 0;
 }
