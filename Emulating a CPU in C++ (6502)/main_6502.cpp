@@ -72,7 +72,20 @@ struct CPU
     }
 
     //opcodes
-    //LDA = Load Accumulator(eg-> Z = Zero flag, N = Negative flag)
+    /*
+    LDA = Load Accumulator
+    The 6502 Load Accumulator (LDA) instruction loads the accumulator with a value or the contents of a memory location.
+    The accumulator is a CPU register that is used for arithmetic and data manipulation. The 6502 instruction set includes six instructions that deal with the accumulator.
+    The 6502 instruction set also includes instructions to load the X and Y registers:
+    LDX: Load X register
+    LDY: Load Y register
+    The 6502 instruction set also includes instructions to store the accumulator and X registers:
+    STA: Store Accumulator
+    STX: Store X register
+    The 6502 instruction set also includes instructions to clear the carry and shift left one bit:
+    CLC: Clear carry
+    ASL: Arithmetic shift left
+    */
     static constexpr Byte
         INS_LDA_IM = 0xA9;
     static constexpr Byte
