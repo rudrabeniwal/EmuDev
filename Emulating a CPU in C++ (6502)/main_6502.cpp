@@ -56,14 +56,33 @@ struct CPU
         Byte Data = memory[PC];
         PC++;
         cycles--;
+        return Data;
     }
+
+    //opcodes
+    static constexpr Byte
+        INS_LDA_IM = 0xA9; //LDA = Load Accumulator(eg-> Z = Zero flag, N = Negative flag)
 
     void Execute ( u32 Cycles, Mem& memory)
     {
         while (Cycles >0)
         {
             Byte Ins = Fetch( Cycles, memory);
-            (void)Ins;
+            switch (Ins)
+            {
+            case INS_LDA_IM:
+            {
+                Byte Value = Fetch( Cycles, memory);
+                A = Value;
+                Z = (A ==0);
+                N = (A &0b10000000) > 0;
+            } break;
+            default:
+            {
+                printf("Instruction not handled %d", Ins);
+            } break;
+            }
+
         }
     }
 };
