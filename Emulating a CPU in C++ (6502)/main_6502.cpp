@@ -56,7 +56,7 @@ struct CPU
 
     }
 
-    Byte FetchByte ( u32 cycles, Mem& memory) 
+    Byte FetchByte ( u32& cycles, Mem& memory) 
     {
         Byte Data = memory[PC];
         PC++;
@@ -64,10 +64,25 @@ struct CPU
         return Data;
     }
 
-    //opcodes
-    static constexpr Byte
-        INS_LDA_IM = 0xA9; //LDA = Load Accumulator(eg-> Z = Zero flag, N = Negative flag)
+     Byte ReadByte ( u32& cycles, Byte address, Mem& memory) 
+    {
+        Byte Data = memory[address];
+        cycles--;
+        return Data;
+    }
 
+    //opcodes
+    //LDA = Load Accumulator(eg-> Z = Zero flag, N = Negative flag)
+    static constexpr Byte
+        INS_LDA_IM = 0xA9;
+    static constexpr Byte
+        INS_LDA_ZP = 0XA5; 
+
+    void LDASetStatus()
+    {
+        Z = (A ==0);
+        N = (A &0b10000000) > 0;
+    }
     void Execute ( u32 Cycles, Mem& memory)
     {
         while (Cycles >0)
@@ -79,9 +94,15 @@ struct CPU
             {
                 Byte Value = FetchByte( Cycles, memory);
                 A = Value;
-                Z = (A ==0);
-                N = (A &0b10000000) > 0;
-            } break;
+                LDASetStatus();
+            }
+            case INS_LDA_ZP: //the next byte after the opcode is the address in zero page
+            {
+                Byte ZeroPageAddress = FetchByte( Cycles, memory);
+                //we want to only read a byte, not to increase the program counter -> ReadByte
+                A = ReadByte( Cycles, ZeroPageAddress, memory);
+                LDASetStatus();
+            }
             default:
             {
                 printf("Instruction not handled %d", Ins);
@@ -97,10 +118,19 @@ int main()
     Mem mem;
     CPU cpu;
     cpu.Reset( mem );
-    //start of a little inline program
+    /*                 Test for Immediate 
+    //start of a little inline program 
     mem[0xFFFC] = CPU::INS_LDA_IM;
     mem[0xFFFD] = 0x42; //for example we want to load hex value 0x42
     //end of a little inline program
     cpu.Execute( 2, mem );
+    */
+
+    //start of a little inline program
+    mem[0xFFFC] = CPU::INS_LDA_ZP;
+    mem[0xFFFD] = 0x42; //for example we want to load zero page value address 0x42
+    mem[0x0042] = 0x84; //at the zero page address 42 we want to stick an actual piece of data which is 84
+    //end of a little inline program 
+    cpu.Execute( 3, mem );
     return 0;
 }
