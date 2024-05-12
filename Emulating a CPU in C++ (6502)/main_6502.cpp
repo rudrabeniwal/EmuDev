@@ -64,8 +64,41 @@ struct CPU
         return Data;
     }
 
-     Byte ReadByte ( u32& cycles, Byte address, Mem& memory) 
+    Byte FetchWord ( u32& cycles, Mem& memory) 
     {
+        /*
+        For Example - Fetching the first byte:
+        memory[0x00] contains 0xAB.
+        We store 0xAB in the lower-order byte of the Data variable.
+        Incrementing the Program Counter (PC): PC becomes 0x01.
+        Fetching the second byte:
+        memory[0x01] contains 0xCD.
+        We shift 0xCD left by 8 bits to position it in the higher-order byte of Data.
+        Now, the Data variable contains 0xCD00.
+        Decrementing the cycle count by 2.
+        Finally, Data holds the assembled 16-bit word 0xCDAB.
+        So, after executing FetchWord, the resulting Data variable contains the 16-bit word 0xCDAB, which was assembled from 
+        the two consecutive bytes 0xAB and 0xCD fetched from memory. This process allows us to correctly interpret and use 16-bit values
+        stored in memory in our CPU simulation.
+
+        */
+        Word Data = memory[PC];
+        PC++;
+        Data |= (memory[PC] << 8);
+        cycles -= 2;
+        /*
+        If you wanted to handle endianess
+        you would have to swap bytes here
+
+        if ( PLATFORM_BIG_ENDIAN )
+        SwapBytesInWord(Data)
+        */
+        return Data;
+    }
+
+    Byte ReadByte ( u32& cycles, Byte address, Mem& memory) 
+    {
+        //6502 is little endian
         Byte Data = memory[address];
         cycles--;
         return Data;
@@ -84,11 +117,9 @@ struct CPU
     It's a key component in processing data and executing instructions effectively.
     */
     static constexpr Byte
-        INS_LDA_IM = 0xA9;
-    static constexpr Byte
-        INS_LDA_ZP = 0XA5; 
-    static constexpr Byte
-        INS_LDA_ZPX = 0XB5;
+        INS_LDA_IM = 0xA9,
+        INS_LDA_ZP = 0XA5, 
+        INS_LDA_ZPX = 0XB5,;
 
     void LDASetStatus()
     {
@@ -107,20 +138,23 @@ struct CPU
                 Byte Value = FetchByte( Cycles, memory);
                 A = Value;
                 LDASetStatus();
-            }
+            } break;
             case INS_LDA_ZP: //the next byte after the opcode is the address in zero page
             {
                 Byte ZeroPageAddr = FetchByte( Cycles, memory);
                 //we want to only read a byte, not to increase the program counter -> ReadByte
                 A = ReadByte( Cycles, ZeroPageAddr, memory);
                 LDASetStatus();
-            }
+            } break;
             case INS_LDA_ZPX: 
             {
                 Byte ZeroPageAddr = FetchByte( Cycles, memory);
+                ZeroPageAddr =+ X;
+                Cycles--;
                 A = ReadByte( Cycles, ZeroPageAddr, memory);
                 LDASetStatus();
-            }
+            } break;
+        
 
             default:
             {
@@ -209,7 +243,7 @@ int main()
     mem[0xFFFD] = 0x42; //for example we want to load zero page value address 0x42
     mem[0x0042] = 0x84; //at the zero page address 42 we want to stick an actual piece of data which is 84
     //end of a little inline program 
-    cpu.Execute( 3, mem );
+    cpu.Execute( 4, mem );
 
     return 0;
 }
