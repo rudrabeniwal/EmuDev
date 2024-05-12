@@ -75,16 +75,12 @@ struct CPU
     /*
     LDA = Load Accumulator
     The 6502 Load Accumulator (LDA) instruction loads the accumulator with a value or the contents of a memory location.
-    The accumulator is a CPU register that is used for arithmetic and data manipulation. The 6502 instruction set includes six instructions that deal with the accumulator.
-    The 6502 instruction set also includes instructions to load the X and Y registers:
-    LDX: Load X register
-    LDY: Load Y register
-    The 6502 instruction set also includes instructions to store the accumulator and X registers:
-    STA: Store Accumulator
-    STX: Store X register
-    The 6502 instruction set also includes instructions to clear the carry and shift left one bit:
-    CLC: Clear carry
-    ASL: Arithmetic shift left
+    The accumulator is a special-purpose register found in many central processing units (CPUs). It's used for performing arithmetic 
+    and logic operations, as well as storing intermediate results within the CPU during program execution.
+    In simpler terms, think of the accumulator as a temporary storage area within the CPU where calculations happen. It holds data that's being actively worked on
+    by the CPU, like numbers being added or subtracted, results of logical comparisons, or data being moved around.
+    The accumulator is often involved in various instructions and operations, and it plays a central role in the execution of programs by the CPU.
+    It's a key component in processing data and executing instructions effectively.
     */
     static constexpr Byte
         INS_LDA_IM = 0xA9;
@@ -131,19 +127,46 @@ int main()
     Mem mem;
     CPU cpu;
     cpu.Reset( mem );
-    /*                 Test for Immediate 
+    /*
+    
+    Test for Immediate 
+
+    Theory:INS_LDA_IM - Load Accumulator with Immediate value:
+    This instruction loads a value directly into the Accumulator register from the immediate operand, meaning the value to be loaded follows the instruction in memory.
+
+    Operation:
+    Fetch: The CPU fetches the next byte from memory after the opcode, which represents the immediate value.
+    Load: The fetched byte is then loaded into the Accumulator register (A).
+
+    Code:
     //start of a little inline program 
     mem[0xFFFC] = CPU::INS_LDA_IM;
     mem[0xFFFD] = 0x42; //for example we want to load hex value 0x42
     //end of a little inline program
     cpu.Execute( 2, mem );
+
     */
 
+    /*
+
+    Test for Zero Page
+
+    INS_LDA_ZP - Load Accumulator from Zero Page:
+    This instruction loads a value from the zero page (first 256 bytes of memory) into the Accumulator register.
+    
+    Operation:
+    Fetch: The CPU fetches the next byte from memory after the opcode, which represents the address in the zero page.
+    Read: It reads the byte from memory at the address specified in the zero page.
+    Load: The value read from the zero page is then loaded into the Accumulator register (A).
+    
+    */
+    //Code:
     //start of a little inline program
     mem[0xFFFC] = CPU::INS_LDA_ZP;
     mem[0xFFFD] = 0x42; //for example we want to load zero page value address 0x42
     mem[0x0042] = 0x84; //at the zero page address 42 we want to stick an actual piece of data which is 84
     //end of a little inline program 
     cpu.Execute( 3, mem );
+
     return 0;
 }
