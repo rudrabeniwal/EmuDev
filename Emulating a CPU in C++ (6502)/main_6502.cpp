@@ -77,7 +77,8 @@ struct CPU
     The 6502 Load Accumulator (LDA) instruction loads the accumulator with a value or the contents of a memory location.
     The accumulator is a special-purpose register found in many central processing units (CPUs). It's used for performing arithmetic 
     and logic operations, as well as storing intermediate results within the CPU during program execution.
-    In simpler terms, think of the accumulator as a temporary storage area within the CPU where calculations happen. It holds data that's being actively worked on
+    In simpler terms, think of the accumulator as a temporary storage area within the CPU where calculations happen. 
+    It holds data that's being actively worked on
     by the CPU, like numbers being added or subtracted, results of logical comparisons, or data being moved around.
     The accumulator is often involved in various instructions and operations, and it plays a central role in the execution of programs by the CPU.
     It's a key component in processing data and executing instructions effectively.
@@ -86,6 +87,8 @@ struct CPU
         INS_LDA_IM = 0xA9;
     static constexpr Byte
         INS_LDA_ZP = 0XA5; 
+    static constexpr Byte
+        INS_LDA_ZPX = 0XB5;
 
     void LDASetStatus()
     {
@@ -107,11 +110,18 @@ struct CPU
             }
             case INS_LDA_ZP: //the next byte after the opcode is the address in zero page
             {
-                Byte ZeroPageAddress = FetchByte( Cycles, memory);
+                Byte ZeroPageAddr = FetchByte( Cycles, memory);
                 //we want to only read a byte, not to increase the program counter -> ReadByte
-                A = ReadByte( Cycles, ZeroPageAddress, memory);
+                A = ReadByte( Cycles, ZeroPageAddr, memory);
                 LDASetStatus();
             }
+            case INS_LDA_ZPX: 
+            {
+                Byte ZeroPageAddr = FetchByte( Cycles, memory);
+                A = ReadByte( Cycles, ZeroPageAddr, memory);
+                LDASetStatus();
+            }
+
             default:
             {
                 printf("Instruction not handled %d", Ins);
@@ -132,7 +142,8 @@ int main()
     Test for Immediate 
 
     Theory:INS_LDA_IM - Load Accumulator with Immediate value:
-    This instruction loads a value directly into the Accumulator register from the immediate operand, meaning the value to be loaded follows the instruction in memory.
+    This instruction loads a value directly into the Accumulator register from the immediate operand, 
+    meaning the value to be loaded follows the instruction in memory.
 
     Operation:
     Fetch: The CPU fetches the next byte from memory after the opcode, which represents the immediate value.
@@ -159,9 +170,41 @@ int main()
     Read: It reads the byte from memory at the address specified in the zero page.
     Load: The value read from the zero page is then loaded into the Accumulator register (A).
     
-    */
+    
     //Code:
     //start of a little inline program
+    mem[0xFFFC] = CPU::INS_LDA_ZP;
+    mem[0xFFFD] = 0x42; //for example we want to load zero page value address 0x42
+    mem[0x0042] = 0x84; //at the zero page address 42 we want to stick an actual piece of data which is 84
+    //end of a little inline program 
+    cpu.Execute( 3, mem );
+
+    */
+
+   /*
+
+   Test for Zero Page X
+
+   The instruction INS_LDA_ZPX is a variation of the LDA (Load Accumulator) instruction, specifically designed to load data 
+   into the accumulator from a memory location in the zero page, with an additional offset provided by the X register. 
+
+   Here's a detailed explanation:
+   Instruction Name:
+   Mnemonic: LDA (Load Accumulator)
+   Addressing Mode: Zero Page Indexed with X (ZPX)
+   Operation:
+   Fetch Operand: The CPU fetches the opcode INS_LDA_ZPX from memory.
+   Calculate Address: It then fetches the next byte, which represents the base address in the zero page. 
+   The value of the X register is added to this base address to calculate the effective address.
+   Load Data: The CPU reads the byte stored at the calculated effective address and loads it into the Accumulator register (A).
+   
+   Code:
+   
+   
+   */
+
+  
+   //start of a little inline program
     mem[0xFFFC] = CPU::INS_LDA_ZP;
     mem[0xFFFD] = 0x42; //for example we want to load zero page value address 0x42
     mem[0x0042] = 0x84; //at the zero page address 42 we want to stick an actual piece of data which is 84
