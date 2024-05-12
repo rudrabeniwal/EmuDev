@@ -23,12 +23,20 @@ struct Mem
     {
         return Data[Address];
     }
-    //write 1 byte from memory
+
+    //write 1 byte in memory
     Byte& operator[] (u32 Address)
     {
         return Data[Address];
     }
 
+    //write 2 bytes in memory
+    void WriteWord(Word Value, u32 Address, u32& Cycles)
+    {
+        Data[Address] = Value & 0xFF;
+        Data[Address + 1] = (Value >> 8) & 0xFF; 
+        Cycles -= 2;
+    }
 };
 
 struct CPU
@@ -82,7 +90,8 @@ struct CPU
         stored in memory in our CPU simulation.
 
         */
-        Word Data = memory[PC];
+        u32 Data = memory[PC];/*By using u32, you ensure that you have at least 32 bits of storage space, which is sufficient to hold
+        a 16-bit word without any risk of overflow or truncation */
         PC++;
         Data |= (memory[PC] << 8);
         cycles -= 2;
@@ -105,7 +114,9 @@ struct CPU
     }
 
     //opcodes
+
     /*
+
     LDA = Load Accumulator
     The 6502 Load Accumulator (LDA) instruction loads the accumulator with a value or the contents of a memory location.
     The accumulator is a special-purpose register found in many central processing units (CPUs). It's used for performing arithmetic 
@@ -115,11 +126,29 @@ struct CPU
     by the CPU, like numbers being added or subtracted, results of logical comparisons, or data being moved around.
     The accumulator is often involved in various instructions and operations, and it plays a central role in the execution of programs by the CPU.
     It's a key component in processing data and executing instructions effectively.
+    
+    JSR - Jump to Subroutine
+    The JSR instruction pushes the address (minus one) of the return point on to the stack and then sets the program counter
+    to the target memory address.
+
+    Operation:
+    Save Return Address: The CPU pushes the address of the instruction following the JSR onto the stack. This address is typically the address of
+     the next instruction after the JSR.
+    Jump to Subroutine: The CPU then jumps to the specified subroutine address, which is provided as the operand of the JSR instruction.
+    Execution of Subroutine: The subroutine code executes.
+    Return: Upon completion of the subroutine, a return instruction (RTS - Return from Subroutine) is typically used to transfer control back to
+    the instruction immediately following the JSR.
+    Restore Return Address: The CPU pops the return address from the stack and resumes execution from that address.
+    
+    
+    
+    
     */
     static constexpr Byte
         INS_LDA_IM = 0xA9,
         INS_LDA_ZP = 0XA5, 
-        INS_LDA_ZPX = 0XB5,;
+        INS_LDA_ZPX = 0XB5,
+        INS_JSR = 0X20;
 
     void LDASetStatus()
     {
@@ -139,6 +168,7 @@ struct CPU
                 A = Value;
                 LDASetStatus();
             } break;
+
             case INS_LDA_ZP: //the next byte after the opcode is the address in zero page
             {
                 Byte ZeroPageAddr = FetchByte( Cycles, memory);
@@ -146,6 +176,7 @@ struct CPU
                 A = ReadByte( Cycles, ZeroPageAddr, memory);
                 LDASetStatus();
             } break;
+
             case INS_LDA_ZPX: 
             {
                 Byte ZeroPageAddr = FetchByte( Cycles, memory);
@@ -154,7 +185,16 @@ struct CPU
                 A = ReadByte( Cycles, ZeroPageAddr, memory);
                 LDASetStatus();
             } break;
-        
+            
+            case INS_JSR:
+            {
+                Word SubAddr = FetchWord( Cycles, memory);
+                // Decrease stack pointer before pushing the return address onto the stack
+                SP -= 2;
+                // Push the return address onto the stack
+                memory.WriteWord(PC - 1, SP, Cycles);
+                Cycles--;
+            }
 
             default:
             {
@@ -233,17 +273,25 @@ int main()
    Load Data: The CPU reads the byte stored at the calculated effective address and loads it into the Accumulator register (A).
    
    Code:
-   
+
+   //start of a little inline program
+    mem[0xFFFC] = CPU::INS_LDA_ZP;
+    mem[0xFFFD] = 0x42;
+    mem[0x0042] = 0x84;
+    //end of a little inline program 
+    cpu.Execute( 4, mem );
    
    */
 
-  
+
    //start of a little inline program
-    mem[0xFFFC] = CPU::INS_LDA_ZP;
-    mem[0xFFFD] = 0x42; //for example we want to load zero page value address 0x42
-    mem[0x0042] = 0x84; //at the zero page address 42 we want to stick an actual piece of data which is 84
+    mem[0xFFFC] = CPU::INS_JSR;
+    mem[0xFFFD] = 0x42;
+    mem[0x4242] = CPU::INS_LDA_IM;
+    mem[0x4243] = 0x84;
     //end of a little inline program 
-    cpu.Execute( 4, mem );
+    cpu.Execute( 9, mem );
+   
 
     return 0;
 }
