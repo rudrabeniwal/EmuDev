@@ -180,7 +180,7 @@ struct CPU
             case INS_LDA_ZPX: 
             {
                 Byte ZeroPageAddr = FetchByte( Cycles, memory);
-                ZeroPageAddr =+ X;
+                ZeroPageAddr += X;
                 Cycles--;
                 A = ReadByte( Cycles, ZeroPageAddr, memory);
                 LDASetStatus();
@@ -193,6 +193,7 @@ struct CPU
                 SP -= 2;
                 // Push the return address onto the stack
                 memory.WriteWord(PC - 1, SP, Cycles);
+                PC = SubAddr;
                 Cycles--;
             } break;
 
