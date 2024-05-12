@@ -194,7 +194,7 @@ struct CPU
                 // Push the return address onto the stack
                 memory.WriteWord(PC - 1, SP, Cycles);
                 Cycles--;
-            }
+            } break;
 
             default:
             {
