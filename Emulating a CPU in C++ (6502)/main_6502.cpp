@@ -288,6 +288,7 @@ int main()
    //start of a little inline program
     mem[0xFFFC] = CPU::INS_JSR;
     mem[0xFFFD] = 0x42;
+    mem[0xFFFE] = 0x42;
     mem[0x4242] = CPU::INS_LDA_IM;
     mem[0x4243] = 0x84;
     //end of a little inline program 
