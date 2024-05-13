@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdio.h>
+#include <cstdint>
 #include <stdlib.h>
 
     using Byte = unsigned char;
@@ -34,7 +36,7 @@ struct Mem
     void WriteWord(Word Value, u32 Address, u32& Cycles)
     {
         Data[Address] = Value & 0xFF;
-        Data[Address + 1] = (Value >> 8) & 0xFF; 
+        Data[Address + 1] = (Value >> 8);
         Cycles -= 2;
     }
 };
@@ -66,6 +68,7 @@ struct CPU
 
     Byte FetchByte ( u32& cycles, Mem& memory) 
     {
+        cycles--;
         Byte Data = memory[PC];
         PC++;
         cycles--;
@@ -93,7 +96,10 @@ struct CPU
         u32 Data = memory[PC];/*By using u32, you ensure that you have at least 32 bits of storage space, which is sufficient to hold
         a 16-bit word without any risk of overflow or truncation */
         PC++;
+
         Data |= (memory[PC] << 8);
+        PC++;
+
         cycles -= 2;
         /*
         If you wanted to handle endianess
@@ -189,10 +195,8 @@ struct CPU
             case INS_JSR:
             {
                 Word SubAddr = FetchWord( Cycles, memory);
-                // Decrease stack pointer before pushing the return address onto the stack
-                SP -= 2;
-                // Push the return address onto the stack
                 memory.WriteWord(PC - 1, SP, Cycles);
+                SP += 2;
                 PC = SubAddr;
                 Cycles--;
             } break;
