@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <cstdint>
 #include <stdlib.h>
+#include "c6502.h"
 
     using Byte = unsigned char;
     using Word = unsigned short;
