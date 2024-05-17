@@ -1,5 +1,8 @@
 #pragma once 
 #include <stdint.h>
+
+using Addr = uint16_t;
+
 class Bus{
 
 public:

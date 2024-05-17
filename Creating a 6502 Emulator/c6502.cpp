@@ -1,6 +1,6 @@
 #include "c6502.h"
 
-static uint16_t compose(uint8_t high, uint8_t low) {
+static Addr compose(uint8_t high, uint8_t low) {
     return high<<8 | low;
 }
 
@@ -17,6 +17,9 @@ void c6502::handleInstruction() {
     advance_pc();
 
     switch(current_opcode) {
+        case 0xa5:
+            op_lda(addrmode_zp());
+            break;
         case 0xa9:
             op_lda(addrmode_immediate());
             break;
@@ -32,11 +35,19 @@ void c6502::advance_pc() {
 }
 
 // address modes
-Addr c6502::addrmode_immediate() {
-    Addr pc = compose(regPCH, regPCL);
+
+// Addr c6502::addrmode_immediate() {
+//     Addr pc = compose(regPCH, regPCL);
+//     advance_pc();
+
+//     return pc;
+// }
+
+Addr c6502::addrmode_zp() {
+    Addr addr = bus_.read( compose(regPCH, regPCL ));
     advance_pc();
 
-    return pc;
+    return addr;
 }
 
 //operation
