@@ -32,6 +32,8 @@ private:
     void handleInstruction();
     void advance_pc();
 
+    Addr pc() const;
+
     uint8_t ccGet(CC cc) const;
     void ccSet(CC cc, bool value);
 
@@ -39,6 +41,7 @@ private:
     //address modes
     Addr addrmode_immediate();
     Addr addrmode_zp();
+    Addr addrmode_abs();
 
     //operations
     void op_lda(Addr addr);

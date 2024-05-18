@@ -13,12 +13,15 @@ void c6502::runCPU() {
 }
 
 void c6502::handleInstruction() {
-    current_opcode = bus_.read( compose(regPCH, regPCL), true);
+    current_opcode = bus_.read( pc(), true);
     advance_pc();
 
     switch(current_opcode) {
         case 0x26:
             op_rol(addrmode_zp());
+            break;
+        case 0x2e:
+            op_rol(addrmode_abs());
             break;
         case 0x85: 
             op_sta( addrmode_zp());
@@ -29,18 +32,25 @@ void c6502::handleInstruction() {
         case 0xa9:
             op_lda(addrmode_immediate());
             break;
+        case 0xad:
+            op_lda(addrmode_abs());
+            break;
     }
 }
 
-void c6502::advance_pc() {
-    Addr pc = compose(regPCH, regPCL);
-    pc++;
+void c6502::advance_pc() { //increment the program counter 
+    Addr pc_ = pc();
+    pc_++;
     // splitting the program counter into high and low bytes after incrementing it allows the CPU to efficiently address memory, utilize its limited number of address pins, and support various addressing modes required for executing instructions accurately. This splitting ensures that the CPU can access individual bytes of the memory address and move to the next instruction in memory seamlessl
-    regPCH = pc >> 8;
-    regPCL = pc & 0xff;
+    regPCH = pc_ >> 8;
+    regPCL = pc_ & 0xff;
 }
 
-uint8_t c6502::ccGet(CC cc) const {
+Addr c6502::pc() const {
+    return compose(regPCH, regPCL);
+}
+
+uint8_t c6502::ccGet( CC cc) const {
     return bool( regStatus & (1<<int(cc)));
 }
 
@@ -55,11 +65,21 @@ void c6502::ccSet(CC cc, bool value) {
 
 //ADDRESS MODES
 
-Addr c6502::addrmode_immediate() {
-    Addr pc = compose(regPCH, regPCL);
+Addr c6502::addrmode_abs() {
+    Addr res = bus_.read( pc() );
     advance_pc();
 
-    return pc;
+    res |= bus_.read( pc() ) << 8;
+    advance_pc();
+
+    return res;
+}    
+
+Addr c6502::addrmode_immediate() {
+    Addr stored_pc = pc();
+    advance_pc();
+
+    return stored_pc;
 }
 
 Addr c6502::addrmode_zp() {
@@ -83,7 +103,10 @@ void c6502::op_rol(Addr addr) {
 
     value <<= 1;
     value |= ccGet(CC::Carry);
-    ccSet( CC::Carry, value & 0x100);
+    ccSet( CC::Carry, value & 0x100);//copy the 8th bit
+    ccSet( CC::Negative, value & 0x80);//copy the 7th bit
+    ccSet( CC::Carry, (value & 0xff) == 0 );
+
 
     bus_.write(addr, value);
 }
