@@ -23,6 +23,9 @@ void c6502::handleInstruction() {
         case 0x2e:
             op_rol(addrmode_abs());
             break;
+        case 0x48:
+            op_pha(addrmode_stack());
+            break;
         case 0x85: 
             op_sta( addrmode_zp());
             break;
@@ -73,7 +76,12 @@ Addr c6502::addrmode_abs() {
     advance_pc();
 
     return res;
-}    
+}
+
+Addr c6502::addrmode_stack () {   
+    bus_.read( pc() );
+    return compose(0x01, regSP);
+}
 
 Addr c6502::addrmode_immediate() {
     Addr stored_pc = pc();
@@ -113,5 +121,11 @@ void c6502::op_rol(Addr addr) {
 
 void c6502::op_sta (Addr addr) {
     bus_.write( addr, regA );
+}
+
+void c6502::op_pha (Addr addr) {
+    bus_.write( addr, regA );
+
+    regSP--;
 }
 

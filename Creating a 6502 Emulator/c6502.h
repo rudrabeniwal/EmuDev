@@ -42,10 +42,12 @@ private:
     Addr addrmode_immediate();
     Addr addrmode_zp();
     Addr addrmode_abs();
+    Addr addrmode_stack();
 
     //operations
     void op_lda(Addr addr);
     void op_rol(Addr addr);
     void op_sta(Addr addr);
+    void op_pha(Addr addr);
 
 };
