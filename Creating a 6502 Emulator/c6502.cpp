@@ -26,6 +26,9 @@ void c6502::handleInstruction() {
         case 0x48:
             op_pha(addrmode_stack());
             break;
+        case 0x68:
+            op_pla(addrmode_stack());
+            break;
         case 0x85: 
             op_sta( addrmode_zp());
             break;
@@ -119,13 +122,22 @@ void c6502::op_rol(Addr addr) {
     bus_.write(addr, value);
 }
 
+
 void c6502::op_sta (Addr addr) {
     bus_.write( addr, regA );
 }
 
+//The push A operation stores the contents of the accumulator register (A) onto the stack.
 void c6502::op_pha (Addr addr) {
     bus_.write( addr, regA );
 
     regSP--;
 }
 
+//The pull A operation retrieves the value from the stack and stores it in the accumulator (A).
+void c6502::op_pla(Addr addr) {
+    regA = bus_.read( compose( 0x01, regSP));
+
+    ccSet( CC::Negative, regA & 0x80);
+    ccSet( CC::Zero, regA == 0);
+}

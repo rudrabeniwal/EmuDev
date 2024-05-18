@@ -49,5 +49,6 @@ private:
     void op_rol(Addr addr);
     void op_sta(Addr addr);
     void op_pha(Addr addr);
+    void op_pla(Addr addr);
 
 };
