@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include "bus.h"
+#include "Bus.h"
 
 class c6502 {
     Bus &bus_;
