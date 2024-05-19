@@ -1,0 +1,161 @@
+#!/usr/bin/python3
+
+import argparse
+import serial.tools.list_ports
+import time
+
+from functools import partial
+
+
+import colored
+
+
+import assert_signal
+
+from deferred_actions import DeferredActions
+from mem_file import MemFile, array_to_number
+from memory_mapped_io import MemoryMappedIo
+from test_harness import TestHarness, BusStatus
+
+
+parser = argparse.ArgumentParser(
+        description="Run 6502 test plan on the test harness")
+parser.add_argument('memory_file', type=open, help="File describing initial memory layout")
+parser.add_argument('test_plan_file', type=open, help="File describing expected test progression")
+parser.add_argument('-p', '--port', help="The serial port to use. By default, use the first one located")
+
+
+args = parser.parse_args()
+
+if args.port is None:
+    comports = serial.tools.list_ports.comports()
+    if len(comports)==0:
+        exit_error("No serial ports found on system")
+
+    args.port = comports[0].device
+
+
+test_harness = TestHarness(args.port)
+deferred_actions = DeferredActions()
+memory_mapped_io = MemoryMappedIo(deferred_actions, test_harness)
+
+def verify(*args, msg: str) -> None:
+    if len(args)==1:
+        assert type(args[0]) is bool
+
+        if not args[0]:
+            raise RuntimeError(f"Verification failed at line {test_plan_file.line_num}: {msg}")
+    elif len(args)==2:
+        if not args[0]==args[1]:
+            raise RuntimeError(f"Verification failed at line {test_plan_file.line_num}: {msg}. Expected {args[1]:x}, got {args[0]:x}.")
+    else:
+        assert False, "Wrong number of arguments passed"
+
+
+def do_op(plan: list[int]) -> None:
+    num_cycles = plan[1]
+    assert num_cycles>0, f"Num cycles in plan is too low: {num_cycles}"
+
+    status = next_cycle()
+    num_cycles -= 1
+
+    verify( "SYNC" in status.flags, msg="Command took longer than expected" )
+    verify( status.address, array_to_number(plan[4:8]), msg="Command read from wrong address" )
+    verify( status.data, array_to_number(plan[2:4]), msg="Command executes wrong opcode" )
+
+    while num_cycles>0:
+        status = next_cycle()
+        num_cycles -= 1
+
+        verify( "SYNC" not in status.flags, msg="Opcode shorter than expected" )
+
+    verify( status.address, array_to_number(plan[10:14]), msg="Opcode last bus access to wrong address" )
+    if plan[0]==0:
+        pass
+    elif plan[0]==1:
+        verify( status.read, msg="Opcode ended in write instead of read" )
+        verify( status.data, array_to_number(plan[8:10]), msg="Opcode read wrong value on last bus access" )
+    elif plan[0]==2:
+        verify( status.write, msg="Opcode ended in read instead of write" )
+        verify( status.data, array_to_number(plan[8:10]), msg="Opcode wrote wrong value on last bus access" )
+    else:
+        assert False, "Unknown operation type"
+
+
+def do_bus_op(plan: list[int]) -> None:
+    status = next_cycle()
+    if plan[1]:
+        verify( status.read, msg="Invalid bus state: expected read, got write" )
+    else:
+        verify( not status.read, msg="Invalid bus state: expected write, got read" )
+
+    verify( status.address, array_to_number(plan[2:6]), msg="Bus access for wrong address" )
+    verify( status.data, array_to_number(plan[6:8]), msg="Bus access with wrong value" )
+
+
+def do_assert_signal(plan: list[int]) -> None:
+    assert_sig = assert_signal.AssertSignal(plan)
+
+    if assert_sig.pin == assert_signal.Signals.Reset:
+        deferred_actions.add_action( partial(test_harness.reset, True), assert_sig.cycles_until_on )
+        deferred_actions.add_action( partial(test_harness.reset, False), assert_sig.cycles_until_off )
+    elif assert_sig.pin == assert_signal.Signals.IRQ:
+        deferred_actions.add_action( partial(test_harness.irq, True), assert_sig.cycles_until_on )
+        deferred_actions.add_action( partial(test_harness.irq, False), assert_sig.cycles_until_off )
+    elif assert_sig.pin == assert_signal.Signals.NMI:
+        deferred_actions.add_action( partial(test_harness.nmi, True), assert_sig.cycles_until_on )
+        deferred_actions.add_action( partial(test_harness.nmi, False), assert_sig.cycles_until_off )
+    else:
+        assert False
+
+
+def do_wait(plan: list[int]) -> None:
+    cycles_to_wait = array_to_number( plan[1:5] )
+
+    while cycles_to_wait>0:
+        next_cycle()
+        cycles_to_wait -= 1
+
+
+def next_cycle() -> BusStatus:
+    deferred_actions.advance()
+    status = test_harness.cycle()
+
+    if (status.address & 0xff00)==0x0200:
+        memory_mapped_io.io(status)
+
+    return status
+
+
+mem_file = MemFile(args.memory_file, num_digits=2)
+
+for byte in mem_file:
+    address = byte[0]
+    data = array_to_number( byte[1][0:2] )
+    test_harness.write_memory( address, data )
+
+mem_file = None
+
+test_plan_file = MemFile(args.test_plan_file, num_digits=14)
+
+for instruction in test_plan_file:
+    if instruction[1][0]==0:
+        # Operation, ignore output
+        do_op(instruction[1])
+    elif instruction[1][0]==1:
+        # Operation, read
+        do_op(instruction[1])
+    elif instruction[1][0]==2:
+        # Operation, write
+        do_op(instruction[1])
+    elif instruction[1][0]==3:
+        do_assert_signal(instruction[1])
+    elif instruction[1][0]==4:
+        do_bus_op(instruction[1])
+    elif instruction[1][0]==5:
+        do_wait(instruction[1])
+    elif instruction[1][0]==15:
+        print(f"{colored.fore.GREEN}Test ran to successful completion{colored.attr(0)}")
+        break
+    else:
+        assert False, f"Received invalid operation {instruction[1][0]} at line {test_plan_file.line_num}"
