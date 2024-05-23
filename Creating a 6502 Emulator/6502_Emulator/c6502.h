@@ -61,6 +61,7 @@ private:
 
     //operations
     void op_lda(Addr addr);
+    void op_ldx(Addr addr);
     void op_rol(Addr addr);
     void op_sta(Addr addr);
     void op_pha(Addr addr);

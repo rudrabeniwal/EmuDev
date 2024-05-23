@@ -60,6 +60,9 @@ void c6502::handleInstruction() {
         case 0x85: 
             op_sta( addrmode_zp());
             break;
+        case 0xa2:
+            op_ldx(addrmode_immediate());
+            break;
         case 0xa5:
             op_lda(addrmode_zp());
             break;
@@ -157,6 +160,10 @@ Addr c6502::addrmode_zp() {
 //LDA (Load Accumulator) is an instruction that loads a byte of memory into the accumulator (A) register. The accumulator is a central register in the 6502 CPU, used for arithmetic and logic operations, so loading it with specific values is a common and necessary operation.
 void c6502::op_lda (Addr addr) {
     regA = read( addr );
+}
+
+void c6502::op_ldx (Addr addr) {
+    regX = read( addr );
 }
 
 //The function op_rol is meant to perform the Rotate Left (ROL) operation on a value stored at a specific memory address. The ROL operation shifts all bits of a value to the left by one position and rotates the most significant bit (MSB) into the carry flag, and the carry flag into the least significant bit (LSB).
