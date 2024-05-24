@@ -1,43 +1,50 @@
 #pragma once
-#include <stdint.h>
+
 #include "Bus.h"
+
+#include <stdint.h>
 
 class c6502 {
     class CpuReset {};
 
+    enum class DelayedOps { None, SEI, CLI } delayed_ops = DelayedOps::None;
+
     Bus &bus_;
+
     uint8_t regA, regX, regY;
-    uint8_t regSP;
-    uint8_t regStatus;
-    uint8_t regPCL, regPCH; // splitting PC to low and high
+    uint8_t regSp;
+    uint8_t regStatus = 0xff;
+    uint8_t regPcL, regPcH;
+
     uint8_t current_opcode;
 
-    bool reset = false, irq = false, nmi = false, ready = false, so= false;
+    bool reset = false, irq = false, nmi = false, ready = false, so = false;
+    bool reset_pending = false, nmi_pending = false;
+    bool incompatible = false;
 
-
-    //CC -> Condition Code (flag)
     enum class CC {
-           Carry,
-           Zero,
-           Intmask,
-           Decimal,
-           NA,
-           NA2,
-           oVerflow,
-           Negative
-       };
-
+        Carry,
+        Zero,
+        IntMask,
+        Decimal,
+        NA,
+        NA2,
+        oVerflow,
+        Negative
+    };
 
 public:
-    explicit c6502(Bus &bus) : bus_(bus) {};
+    explicit c6502(Bus &bus) : bus_(bus) {}
 
-    void runCPU();
+    void runCpu();
+    void setReset(bool state);
+    void setIrq(bool state);
+    void setNmi(bool state);
+    void setReady(bool state);
+    void setSo(bool state);
 
-    void setReset (bool state);
-    void setIrq (bool state);
-    void setNmi (bool state);
-    void setReady (bool state);
-    void setSo (bool state);
+    // Returns true if this cycle is knowningly incompatible
+    bool isIncompatible() const { return incompatible; }
 
 private:
     void handleInstruction();
@@ -46,25 +53,97 @@ private:
 
     Addr pc() const;
 
-    uint8_t read (Addr address, bool sync = false);
-    void write (Addr address, uint8_t data);
+    uint8_t read( Addr address, bool sync = false );
+    void write( Addr address, uint8_t data );
 
-    uint8_t ccGet(CC cc) const;
-    void ccSet(CC cc, bool value);
+    uint8_t ccGet( CC cc ) const;
+    void ccSet( CC cc, bool value );
 
+    void handleNmi();
+    void handleIrq();
 
-    //address modes
-    Addr addrmode_immediate();
-    Addr addrmode_zp();
+    void branch_helper(Addr addr, bool jump);
+
+    // Address modes
     Addr addrmode_abs();
+    Addr addrmode_abs_ind();
+    Addr addrmode_abs_x(bool always_waste_cycle = false);
+    Addr addrmode_abs_y(bool always_waste_cycle = false);
+    Addr addrmode_immediate();
+    Addr addrmode_implicit();
     Addr addrmode_stack();
+    Addr addrmode_zp();
+    Addr addrmode_zp_ind();
+    Addr addrmode_zp_ind_y(bool always_waste_cycle = false);
+    Addr addrmode_zp_x();
+    Addr addrmode_zp_x_ind();
+    Addr addrmode_zp_y();
+    Addr addrmode_special();
 
-    //operations
+
+    // Operations
+    void op_adc(Addr addr);
+    void op_and(Addr addr);
+    void op_asl(Addr addr);
+    void op_aslA();
+    void op_bcc(Addr addr);
+    void op_bcs(Addr addr);
+    void op_beq(Addr addr);
+    void op_bit(Addr addr);
+    void op_bmi(Addr addr);
+    void op_bne(Addr addr);
+    void op_bpl(Addr addr);
+    void op_brk(Addr addr);
+    void op_bvc(Addr addr);
+    void op_bvs(Addr addr);
+    void op_clc(Addr addr);
+    void op_cld(Addr addr);
+    void op_cli(Addr addr);
+    void op_clv(Addr addr);
+    void op_cmp(Addr addr);
+    void op_cpx(Addr addr);
+    void op_cpy(Addr addr);
+    void op_dec(Addr addr);
+    void op_decA(Addr addr);
+    void op_dex(Addr addr);
+    void op_dey(Addr addr);
+    void op_eor(Addr addr);
+    void op_inc(Addr addr);
+    void op_incA(Addr addr);
+    void op_inx(Addr addr);
+    void op_iny(Addr addr);
+    void op_jmp(Addr addr);
+    void op_jsr(Addr addr);
     void op_lda(Addr addr);
     void op_ldx(Addr addr);
-    void op_rol(Addr addr);
-    void op_sta(Addr addr);
+    void op_ldy(Addr addr);
+    void op_lsr(Addr addr);
+    void op_lsrA();
+    void op_nop(Addr addr);
+    void op_ora(Addr addr);
     void op_pha(Addr addr);
+    void op_php(Addr addr);
     void op_pla(Addr addr);
+    void op_plp(Addr addr);
+    void op_rol(Addr addr);
+    void op_rolA();
+    void op_ror(Addr addr);
+    void op_rorA();
+    void op_rti(Addr addr);
+    void op_rts(Addr addr);
+    void op_sbc(Addr addr);
+    void op_sec(Addr addr);
+    void op_sed(Addr addr);
+    void op_sei(Addr addr);
+    void op_sta(Addr addr);
+    void op_stx(Addr addr);
+    void op_sty(Addr addr);
+    void op_tax();
+    void op_tay();
+    void op_tsx();
+    void op_txa();
+    void op_txs();
+    void op_tya();
 
+    void updateNZ(uint8_t val);
 };
