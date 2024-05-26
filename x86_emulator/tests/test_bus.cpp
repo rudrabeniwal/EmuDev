@@ -1,40 +1,40 @@
+#include <gtest/gtest.h>
 #include <iostream>
-#include "bus.h"
-#include "memory.h"
+#include "bus.hpp"
+#include "../src/memory.hpp"
 
-void test_bus_operations() {
-    // Create memory with size 1024 bytes
-    Memory memory(1024);
-    
-    // Create bus
-    Bus bus(memory);
-
-    // Test write and read 8-bit
-    bus.write8(100, 0x12);
-    if (bus.read8(100) != 0x12) {
-        std::cerr << "Test failed: Expected 0x12, but got " << std::hex << static_cast<int>(bus.read8(100)) << std::endl;
-    } else {
-        std::cout << "Test passed: 8-bit read/write" << std::endl;
+// Define a fixture for common setup/teardown
+class BusTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Create memory with size 1024 bytes
+        memory = std::make_shared<Memory>(1024);
+        // Create bus
+        bus = std::make_unique<Bus>(*memory);
     }
 
-    // Test write and read 32-bit
-    bus.write32(200, 0x12345678);
-    if (bus.read32(200) != 0x12345678) {
-        std::cerr << "Test failed: Expected 0x12345678, but got " << std::hex << bus.read32(200) << std::endl;
-    } else {
-        std::cout << "Test passed: 32-bit read/write" << std::endl;
-    }
+    std::shared_ptr<Memory> memory;
+    std::unique_ptr<Bus> bus;
+};
 
-    // Test write and read 64-bit
-    bus.write64(300, 0x123456789ABCDEF0);
-    if (bus.read64(300) != 0x123456789ABCDEF0) {
-        std::cerr << "Test failed: Expected 0x123456789ABCDEF0, but got " << std::hex << bus.read64(300) << std::endl;
-    } else {
-        std::cout << "Test passed: 64-bit read/write" << std::endl;
-    }
+// Test cases for Bus operations
+TEST_F(BusTest, Test8BitReadWrite) {
+    bus->write8(100, 0x12);
+    EXPECT_EQ(bus->read8(100), 0x12) << "8-bit read/write test failed";
 }
 
-int main() {
-    test_bus_operations();
-    return 0;
+TEST_F(BusTest, Test32BitReadWrite) {
+    bus->write32(200, 0x12345678);
+    EXPECT_EQ(bus->read32(200), 0x12345678) << "32-bit read/write test failed";
 }
+
+TEST_F(BusTest, Test64BitReadWrite) {
+    bus->write64(300, 0x123456789ABCDEF0);
+    EXPECT_EQ(bus->read64(300), 0x123456789ABCDEF0) << "64-bit read/write test failed";
+}
+
+// // Main function to run all tests
+// int main(int argc, char **argv) {
+//     ::testing::InitGoogleTest(&argc, argv);
+//     return RUN_ALL_TESTS();
+// }

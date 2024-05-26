@@ -19,7 +19,7 @@ void triggerInterrupt(CPU& cpu, uint8_t vector) {
     }
 }
 // Fetch a single byte from memory
-uint8_t fetch(Bus& bus, const CPU& cpu) {
+uint8_t fetch(Bus& bus,CPU& cpu) {
     return bus.read8(cpu.rip++);
 }
 // Fetch a 32-bit value from memory
@@ -28,7 +28,19 @@ uint32_t fetch32(Bus& bus, CPU& cpu) {
     cpu.rip += 4;
     return value;
 }
-uint64_t& get_register(CPU& cpu, uint8_t index) {
+size_t instruction_length(uint8_t opcode) {
+    // Implement logic to determine instruction length based on opcode
+    // Example implementation:
+    switch (opcode) {
+        case 0x01: // ADD instruction
+            return 3; // Assuming ADD instruction is 3 bytes long
+        // Add more cases for other instructions as needed
+        default:
+            return 1; // Default to 1 byte if opcode not recognized
+    }
+}
+uint64_t &get_register(CPU &cpu, uint8_t index)
+{
     switch (index) {
         case 0: return cpu.rax;
         case 1: return cpu.rcx;
@@ -74,7 +86,9 @@ void update_flags_add(CPU& cpu, uint64_t operand1, uint64_t operand2, uint64_t r
     update_carry_flag(cpu, operand1, operand2, result);
     update_overflow_flag(cpu, operand1, operand2, result);
 }
-void execute(CPU& cpu, Bus& bus, uint8_t opcode) {
+
+void execute(Bus &bus, CPU &cpu, uint8_t opcode)
+{
     switch (opcode) {
         case 0x48: // MOV rax, imm64 (Move 64-bit immediate value into rax register)
             {
@@ -141,25 +155,6 @@ void execute(CPU& cpu, Bus& bus, uint8_t opcode) {
                     // Register-register operation
                     uint64_t& rm_value = get_register(cpu, rm);
                     cpu.rax *= rm_value;
-                } else {
-                    // ModRM addressing mode
-                    // Placeholder for memory addressing (not fully implemented here)
-                }
-            }
-            break;
-        case 0xF7: // DIV r/m64
-            {
-                uint8_t modrm = fetch(bus, cpu);
-                uint8_t mod = modrm >> 6;
-                uint8_t rm = modrm & 0x7;
-
-                if (mod == 3) {
-                    // Register-register operation
-                    uint64_t& rm_value = get_register(cpu, rm);
-                    if (rm_value == 0) {
-                        throw std::runtime_error("Division by zero");
-                    }
-                    cpu.rax /= rm_value;
                 } else {
                     // ModRM addressing mode
                     // Placeholder for memory addressing (not fully implemented here)

@@ -1,6 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
+#include <cstddef>  // Include this for size_t
 #include <cstdint>
 #include <vector>
 

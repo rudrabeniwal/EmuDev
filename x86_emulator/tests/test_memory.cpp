@@ -1,36 +1,36 @@
+#include <gtest/gtest.h>
 #include <iostream>
-#include "memory.h"
+#include "memory.hpp"
 
-void test_memory_operations() {
-    // Create memory with size 1024 bytes
-    Memory memory(1024);
-
-    // Test write and read 8-bit
-    memory.write8(100, 0x12);
-    if (memory.read8(100) != 0x12) {
-        std::cerr << "Test failed: Expected 0x12, but got " << std::hex << static_cast<int>(memory.read8(100)) << std::endl;
-    } else {
-        std::cout << "Test passed: 8-bit read/write" << std::endl;
+// Define a fixture for common setup/teardown
+class MemoryTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Create memory with size 1024 bytes
+        memory = std::make_unique<Memory>(1024);
     }
 
-    // Test write and read 32-bit
-    memory.write32(200, 0x12345678);
-    if (memory.read32(200) != 0x12345678) {
-        std::cerr << "Test failed: Expected 0x12345678, but got " << std::hex << memory.read32(200) << std::endl;
-    } else {
-        std::cout << "Test passed: 32-bit read/write" << std::endl;
-    }
+    std::unique_ptr<Memory> memory;
+};
 
-    // Test write and read 64-bit
-    memory.write64(300, 0x123456789ABCDEF0);
-    if (memory.read64(300) != 0x123456789ABCDEF0) {
-        std::cerr << "Test failed: Expected 0x123456789ABCDEF0, but got " << std::hex << memory.read64(300) << std::endl;
-    } else {
-        std::cout << "Test passed: 64-bit read/write" << std::endl;
-    }
+// Test cases for Memory operations
+TEST_F(MemoryTest, Test8BitReadWrite) {
+    memory->write8(100, 0x12);
+    EXPECT_EQ(memory->read8(100), 0x12) << "8-bit read/write test failed";
 }
 
-int main() {
-    test_memory_operations();
-    return 0;
+TEST_F(MemoryTest, Test32BitReadWrite) {
+    memory->write32(200, 0x12345678);
+    EXPECT_EQ(memory->read32(200), 0x12345678) << "32-bit read/write test failed";
 }
+
+TEST_F(MemoryTest, Test64BitReadWrite) {
+    memory->write64(300, 0x123456789ABCDEF0);
+    EXPECT_EQ(memory->read64(300), 0x123456789ABCDEF0) << "64-bit read/write test failed";
+}
+
+// Main function to run all tests
+// int main(int argc, char **argv) {
+//     ::testing::InitGoogleTest(&argc, argv);
+//     return RUN_ALL_TESTS();
+// }

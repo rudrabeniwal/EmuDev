@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/tests.dir/test_cpu.cpp.o CMakeFiles/tests.dir/test_memory.cpp.o CMakeFiles/tests.dir/test_bus.cpp.o -o tests  -lemulator ../lib/libgtest_main.a ../lib/libgtest.a 

@@ -1,4 +1,4 @@
-#include "bus.h"
+#include "bus.hpp"
 
 Bus::Bus(Memory& mem) : memory(mem) {}
 

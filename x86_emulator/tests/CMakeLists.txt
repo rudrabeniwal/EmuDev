@@ -1,13 +1,34 @@
-enable_testing()
+cmake_minimum_required(VERSION 3.10)
+project(x86_64_Emulator_Test)
 
-add_executable(test_cpu test_cpu.cpp)
-target_link_libraries(test_cpu emulator)
-add_test(NAME test_cpu COMMAND test_cpu)
+set(CMAKE_CXX_STANDARD 17)
 
-add_executable(test_memory test_memory.cpp)
-target_link_libraries(test_memory emulator)
-add_test(NAME test_memory COMMAND test_memory)
+# Locate Google Test
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
 
-add_executable(test_bus test_bus.cpp)
-target_link_libraries(test_bus emulator)
-add_test(NAME test_bus COMMAND test_bus)
+include_directories(${CMAKE_SOURCE_DIR}/src)
+
+# Collect all test source files
+file(GLOB TEST_SOURCES "*.cpp")
+
+# List your specific test source files
+set(TEST_SOURCES
+    test_cpu.cpp
+    test_memory.cpp
+    test_bus.cpp
+    # Add more test source files if needed
+)
+
+# Add executable for tests
+add_executable(tests ${TEST_SOURCES})
+
+# Link with Google Test libraries and your source library (emulator)
+target_link_libraries(tests GTest::GTest GTest::Main emulator)
+
+# Optionally, if you have other dependencies, link them here as well
+# target_link_libraries(tests your_additional_lib)
+
+# Add a test to the project to be run by ctest
+include(GoogleTest)
+gtest_discover_tests(tests)

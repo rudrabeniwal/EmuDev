@@ -1,4 +1,5 @@
-#include "memory.h"
+#include "memory.hpp"
+#include <cstring>  // For std::memcpy
 
 Memory::Memory(size_t size) : data(size) {}
 

@@ -1,7 +1,3 @@
-add_library(emulator
-    cpu.cpp
-    bus.cpp
-    memory.cpp
-)
+# /x86_emulator/src/CMakeLists.txt
 
-target_include_directories(emulator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+# No need to add_executable here, as it's managed by CMake

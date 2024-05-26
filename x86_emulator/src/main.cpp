@@ -1,7 +1,7 @@
 #include <iostream>
-#include "cpu.h"
-#include "bus.h"
-#include "memory.h"
+#include "cpu.hpp"
+#include "bus.hpp"
+#include "memory.hpp"
 
 void load_program(Memory& memory) {
     // Example program: ADD rax, rbx
@@ -28,12 +28,13 @@ void run_emulator() {
     cpu.rbx = 10;
     cpu.rip = 0;
 
-    // Execute instructions
+ // Execute instructions
     try {
         while (true) {
-            execute(bus, cpu);
-            // For demonstration, we limit to one instruction
-            break;
+            uint8_t opcode = memory.read8(cpu.rip);
+            execute(bus, cpu, opcode); // Pass the opcode to execute
+            cpu.rip += instruction_length(opcode); // Increment RIP based on instruction length
+            break; // For demonstration, we limit to one instruction
         }
     } catch (const std::runtime_error& e) {
         std::cerr << "Emulator error: " << e.what() << std::endl;

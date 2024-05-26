@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/x86_emulator.dir/src/main.cpp.o CMakeFiles/x86_emulator.dir/src/cpu.cpp.o CMakeFiles/x86_emulator.dir/src/bus.cpp.o CMakeFiles/x86_emulator.dir/src/memory.cpp.o -o x86_emulator 
