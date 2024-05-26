@@ -175,6 +175,102 @@ tests/fast:
 	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/build
 .PHONY : tests/fast
 
+__/src/bus.o: __/src/bus.cpp.o
+.PHONY : __/src/bus.o
+
+# target to build an object file
+__/src/bus.cpp.o:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/bus.cpp.o
+.PHONY : __/src/bus.cpp.o
+
+__/src/bus.i: __/src/bus.cpp.i
+.PHONY : __/src/bus.i
+
+# target to preprocess a source file
+__/src/bus.cpp.i:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/bus.cpp.i
+.PHONY : __/src/bus.cpp.i
+
+__/src/bus.s: __/src/bus.cpp.s
+.PHONY : __/src/bus.s
+
+# target to generate assembly for a file
+__/src/bus.cpp.s:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/bus.cpp.s
+.PHONY : __/src/bus.cpp.s
+
+__/src/cpu.o: __/src/cpu.cpp.o
+.PHONY : __/src/cpu.o
+
+# target to build an object file
+__/src/cpu.cpp.o:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/cpu.cpp.o
+.PHONY : __/src/cpu.cpp.o
+
+__/src/cpu.i: __/src/cpu.cpp.i
+.PHONY : __/src/cpu.i
+
+# target to preprocess a source file
+__/src/cpu.cpp.i:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/cpu.cpp.i
+.PHONY : __/src/cpu.cpp.i
+
+__/src/cpu.s: __/src/cpu.cpp.s
+.PHONY : __/src/cpu.s
+
+# target to generate assembly for a file
+__/src/cpu.cpp.s:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/cpu.cpp.s
+.PHONY : __/src/cpu.cpp.s
+
+__/src/main.o: __/src/main.cpp.o
+.PHONY : __/src/main.o
+
+# target to build an object file
+__/src/main.cpp.o:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/main.cpp.o
+.PHONY : __/src/main.cpp.o
+
+__/src/main.i: __/src/main.cpp.i
+.PHONY : __/src/main.i
+
+# target to preprocess a source file
+__/src/main.cpp.i:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/main.cpp.i
+.PHONY : __/src/main.cpp.i
+
+__/src/main.s: __/src/main.cpp.s
+.PHONY : __/src/main.s
+
+# target to generate assembly for a file
+__/src/main.cpp.s:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/main.cpp.s
+.PHONY : __/src/main.cpp.s
+
+__/src/memory.o: __/src/memory.cpp.o
+.PHONY : __/src/memory.o
+
+# target to build an object file
+__/src/memory.cpp.o:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/memory.cpp.o
+.PHONY : __/src/memory.cpp.o
+
+__/src/memory.i: __/src/memory.cpp.i
+.PHONY : __/src/memory.i
+
+# target to preprocess a source file
+__/src/memory.cpp.i:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/memory.cpp.i
+.PHONY : __/src/memory.cpp.i
+
+__/src/memory.s: __/src/memory.cpp.s
+.PHONY : __/src/memory.s
+
+# target to generate assembly for a file
+__/src/memory.cpp.s:
+	cd /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/__/src/memory.cpp.s
+.PHONY : __/src/memory.cpp.s
+
 test_bus.o: test_bus.cpp.o
 .PHONY : test_bus.o
 
@@ -260,6 +356,18 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... tests"
+	@echo "... __/src/bus.o"
+	@echo "... __/src/bus.i"
+	@echo "... __/src/bus.s"
+	@echo "... __/src/cpu.o"
+	@echo "... __/src/cpu.i"
+	@echo "... __/src/cpu.s"
+	@echo "... __/src/main.o"
+	@echo "... __/src/main.i"
+	@echo "... __/src/main.s"
+	@echo "... __/src/memory.o"
+	@echo "... __/src/memory.i"
+	@echo "... __/src/memory.s"
 	@echo "... test_bus.o"
 	@echo "... test_bus.i"
 	@echo "... test_bus.s"

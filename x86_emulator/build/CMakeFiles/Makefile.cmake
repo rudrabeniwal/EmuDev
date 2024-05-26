@@ -20,6 +20,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "../googletest/googletest/cmake/gtest.pc.in"
   "../googletest/googletest/cmake/gtest_main.pc.in"
   "../googletest/googletest/cmake/internal_utils.cmake"
+  "../src/CMakeLists.txt"
   "../tests/CMakeLists.txt"
   "/usr/local/lib/cmake/GTest/GTestConfig.cmake"
   "/usr/local/lib/cmake/GTest/GTestConfigVersion.cmake"
@@ -76,6 +77,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "googletest/googletest/generated/gtest.pc"
   "googletest/googletest/generated/gtest_main.pc"
   "googletest/googletest/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "src/CMakeFiles/CMakeDirectoryInformation.cmake"
   "tests/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 

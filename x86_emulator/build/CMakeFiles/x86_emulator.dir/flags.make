@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -I/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/src
 
 CXX_FLAGS = 
 

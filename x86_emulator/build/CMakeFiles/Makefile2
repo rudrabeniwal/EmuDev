@@ -65,17 +65,20 @@ CMAKE_BINARY_DIR = /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build
 # The main recursive "all" target.
 all: CMakeFiles/x86_emulator.dir/all
 all: googletest/all
+all: src/all
 all: tests/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
 preinstall: googletest/preinstall
+preinstall: src/preinstall
 preinstall: tests/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/x86_emulator.dir/clean
 clean: googletest/clean
+clean: src/clean
 clean: tests/clean
 .PHONY : clean
 
@@ -131,6 +134,21 @@ googletest/googletest/clean: googletest/googletest/CMakeFiles/gtest_main.dir/cle
 .PHONY : googletest/googletest/clean
 
 #=============================================================================
+# Directory level rules for directory src
+
+# Recursive "all" directory target.
+src/all:
+.PHONY : src/all
+
+# Recursive "preinstall" directory target.
+src/preinstall:
+.PHONY : src/preinstall
+
+# Recursive "clean" directory target.
+src/clean:
+.PHONY : src/clean
+
+#=============================================================================
 # Directory level rules for directory tests
 
 # Recursive "all" directory target.
@@ -152,7 +170,7 @@ tests/clean: tests/CMakeFiles/tests.dir/clean
 CMakeFiles/x86_emulator.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/x86_emulator.dir/build.make CMakeFiles/x86_emulator.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/x86_emulator.dir/build.make CMakeFiles/x86_emulator.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/CMakeFiles --progress-num=13,14,15,16,17 "Built target x86_emulator"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/CMakeFiles --progress-num=17,18,19,20,21 "Built target x86_emulator"
 .PHONY : CMakeFiles/x86_emulator.dir/all
 
 # Build rule for subdir invocation for target.
@@ -284,12 +302,12 @@ tests/CMakeFiles/tests.dir/all: googletest/googletest/CMakeFiles/gtest.dir/all
 tests/CMakeFiles/tests.dir/all: googletest/googletest/CMakeFiles/gtest_main.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/tests.dir/build.make tests/CMakeFiles/tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/CMakeFiles --progress-num=9,10,11,12 "Built target tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/CMakeFiles --progress-num=9,10,11,12,13,14,15,16 "Built target tests"
 .PHONY : tests/CMakeFiles/tests.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/CMakeFiles 8
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/CMakeFiles 12
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/tests.dir/rule

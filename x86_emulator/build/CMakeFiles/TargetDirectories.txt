@@ -27,6 +27,12 @@
 /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/googletest/googletest/CMakeFiles/install.dir
 /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/googletest/googletest/CMakeFiles/install/local.dir
 /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/googletest/googletest/CMakeFiles/install/strip.dir
+/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/src/CMakeFiles/edit_cache.dir
+/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/src/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/src/CMakeFiles/list_install_components.dir
+/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/src/CMakeFiles/install.dir
+/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/src/CMakeFiles/install/local.dir
+/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/src/CMakeFiles/install/strip.dir
 /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/tests/CMakeFiles/tests.dir
 /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/tests/CMakeFiles/edit_cache.dir
 /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/tests/CMakeFiles/rebuild_cache.dir

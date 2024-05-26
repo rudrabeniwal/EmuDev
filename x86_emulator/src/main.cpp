@@ -42,9 +42,14 @@ void run_emulator() {
 
     // Display the result
     std::cout << "Final RAX: " << cpu.rax << std::endl;
+     std::cout << "-------------------------\n";
+     std::cout << "Emulator execution completed.\n";
 }
 
 int main() {
+    std::cout << "x86 Emulator - Running...\n";
+    std::cout << "-------------------------\n";
     run_emulator();
+
     return 0;
 }

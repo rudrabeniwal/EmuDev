@@ -8,6 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/src/bus.cpp" "tests/CMakeFiles/tests.dir/__/src/bus.cpp.o" "gcc" "tests/CMakeFiles/tests.dir/__/src/bus.cpp.o.d"
+  "/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/src/cpu.cpp" "tests/CMakeFiles/tests.dir/__/src/cpu.cpp.o" "gcc" "tests/CMakeFiles/tests.dir/__/src/cpu.cpp.o.d"
+  "/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/src/main.cpp" "tests/CMakeFiles/tests.dir/__/src/main.cpp.o" "gcc" "tests/CMakeFiles/tests.dir/__/src/main.cpp.o.d"
+  "/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/src/memory.cpp" "tests/CMakeFiles/tests.dir/__/src/memory.cpp.o" "gcc" "tests/CMakeFiles/tests.dir/__/src/memory.cpp.o.d"
   "/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/tests/test_bus.cpp" "tests/CMakeFiles/tests.dir/test_bus.cpp.o" "gcc" "tests/CMakeFiles/tests.dir/test_bus.cpp.o.d"
   "/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/tests/test_cpu.cpp" "tests/CMakeFiles/tests.dir/test_cpu.cpp.o" "gcc" "tests/CMakeFiles/tests.dir/test_cpu.cpp.o.d"
   "/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/tests/test_memory.cpp" "tests/CMakeFiles/tests.dir/test_memory.cpp.o" "gcc" "tests/CMakeFiles/tests.dir/test_memory.cpp.o.d"

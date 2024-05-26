@@ -1,4 +1,12 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/tests.dir/__/src/bus.cpp.o"
+  "CMakeFiles/tests.dir/__/src/bus.cpp.o.d"
+  "CMakeFiles/tests.dir/__/src/cpu.cpp.o"
+  "CMakeFiles/tests.dir/__/src/cpu.cpp.o.d"
+  "CMakeFiles/tests.dir/__/src/main.cpp.o"
+  "CMakeFiles/tests.dir/__/src/main.cpp.o.d"
+  "CMakeFiles/tests.dir/__/src/memory.cpp.o"
+  "CMakeFiles/tests.dir/__/src/memory.cpp.o.d"
   "CMakeFiles/tests.dir/test_bus.cpp.o"
   "CMakeFiles/tests.dir/test_bus.cpp.o.d"
   "CMakeFiles/tests.dir/test_cpu.cpp.o"

@@ -350,6 +350,15 @@ x86_64_Emulator_Test_IS_TOP_LEVEL:STATIC=OFF
 //Value Computed by CMake
 x86_64_Emulator_Test_SOURCE_DIR:STATIC=/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/tests
 
+//Value Computed by CMake
+x86_emulator_BINARY_DIR:STATIC=/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/build/src
+
+//Value Computed by CMake
+x86_emulator_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+x86_emulator_SOURCE_DIR:STATIC=/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/src
+
 
 ########################
 # INTERNAL cache entries
@@ -491,7 +500,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

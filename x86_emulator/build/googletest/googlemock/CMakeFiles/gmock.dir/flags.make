@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/googletest/googlemock/include -I/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/googletest/googlemock -isystem /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/googletest/googletest/include -isystem /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/googletest/googletest
+CXX_INCLUDES = -I/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/src -I/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/googletest/googlemock/include -I/mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/googletest/googlemock -isystem /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/googletest/googletest/include -isystem /mnt/c/Users/rudra/Desktop/EmuDev/x86_emulator/googletest/googletest
 
 CXX_FLAGS = -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
 
